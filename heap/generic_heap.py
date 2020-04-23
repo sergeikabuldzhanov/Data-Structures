@@ -1,22 +1,66 @@
 class Heap:
-    def __init__(self, comparator):
+    def __init__(self, comparator=None):
         self.storage = []
         self.comparator = comparator
 
     def insert(self, value):
-        pass
+        self.storage.append(value)
+        self._bubble_up(self.get_size()-1)
 
     def delete(self):
-        pass
+        if self.get_size():
+            max = self.storage.pop(0)
+            if self.get_size() < 1:
+                return max
+            else:
+                self._sift_down(0)
+                self._sift_down(1)
+                return max
+        return None
 
     def get_priority(self):
-        pass
+        return self.storage[0] if self.get_size() else None
 
     def get_size(self):
-        pass
+        return len(self.storage)
+
+    # internal method for either using passed comparator function of a default
+    def _compare(self, x, y):
+        if self.comparator:
+            return self.comparator(x, y)
+        else:
+            return x > y
 
     def _bubble_up(self, index):
-        pass
+        # find parent element
+        parent_index = (index-1)//2
+        # while parent is smaller than new node, swap them, set new parent
+        while self._compare(self.storage[index], self.storage[parent_index]) and index != 0:
+            self.storage[index], self.storage[parent_index] = self.storage[parent_index], self.storage[index]
+            index = parent_index
+            parent_index = (index-1)//2
 
     def _sift_down(self, index):
-        pass
+        # Func to find index of the larger child
+        def find_larger_child_index(i):
+            size = self.get_size() - 1
+            first_child = None
+            second_child = None
+            if index >= size:
+                return None
+            if size >= i*2 + 1:
+                first_child = self.storage[i*2 + 1]
+            else:
+                return None
+            if size >= i*2 + 2:
+                second_child = self.storage[i*2 + 2]
+            else:
+                return i*2 + 1
+            return i*2+1 if self._compare(first_child, second_child) else i*2+2
+
+        larger_child_i = find_larger_child_index(index)
+        # compare element to it's largest child, swap them if the child is bigger.
+        while larger_child_i is not None and self._compare(self.storage[larger_child_i], self.storage[index]):
+            self.storage[larger_child_i], self.storage[index] = self.storage[index], self.storage[larger_child_i]
+            index = larger_child_i
+            larger_child_i = find_larger_child_index(index)
