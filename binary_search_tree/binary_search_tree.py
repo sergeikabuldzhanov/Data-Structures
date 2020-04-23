@@ -1,7 +1,7 @@
-from dll_stack import Stack
-from dll_queue import Queue
 import sys
 sys.path.append('../queue_and_stack')
+from dll_queue import Queue
+from dll_stack import Stack
 
 
 class BinarySearchTree:
@@ -65,25 +65,70 @@ class BinarySearchTree:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self, node):
-        pass
+        if node.left:
+            self.in_order_print(node.left)
+        print(node.value)
+        if node.right:
+            self.in_order_print(node.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        pass
+        queue = Queue()
+        current_node = node
+        while current_node:
+            print(current_node.value)
+            if current_node.left:
+                queue.enqueue(current_node.left)
+            if current_node.right:
+                queue.enqueue(current_node.right)
+            current_node = queue.dequeue()
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self, node):
-        pass
+        stack = Stack()
+        current_node = node
+        # if there's something in the stack or the node is not empty
+        while len(stack) or current_node is not None:
+            # if the node is not empty, print it, push it on the stack, and go left
+            if current_node is not None:
+                stack.push(current_node)
+                print(current_node.value)
+                current_node = current_node.left
+            # else, pop a node off of stack(go back a level), and go right
+            else:
+                current_node = stack.pop()
+                current_node = current_node.right
 
     # STRETCH Goals -------------------------
     # Note: Research may be required
 
     # Print Pre-order recursive DFT
+
     def pre_order_dft(self, node):
-        pass
+        print(node.value)
+        if node.left:
+            self.pre_order_dft(node.left)
+        if node.right:
+            self.pre_order_dft(node.right)
 
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
-        pass
+        if node.left:
+            self.post_order_dft(node.left)
+        if node.right:
+            self.post_order_dft(node.right)
+        print(node.value)
+
+
+bst = BinarySearchTree(1)
+bst.insert(8)
+bst.insert(5)
+bst.insert(7)
+bst.insert(6)
+bst.insert(3)
+bst.insert(4)
+bst.insert(2)
+
+# bst.post_order_dft(bst)

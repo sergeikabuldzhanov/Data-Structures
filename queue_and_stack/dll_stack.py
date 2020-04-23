@@ -15,5 +15,5 @@ class Stack:
     def pop(self):
         return self.storage.remove_from_tail()
 
-    def len(self):
+    def __len__(self):
         return len(self.storage)
